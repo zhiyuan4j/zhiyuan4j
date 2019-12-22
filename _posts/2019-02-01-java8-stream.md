@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "java8--stream流操作"
+title:  "java8--stream api"
 excerpt: "一些java8 stream api相关的用法"
 categories: [java]
 commnet: true
@@ -81,7 +81,9 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
 - `List<Book>` to `List<BookDTO>` 
 
     ```java
-    List<BookDTO> bookDTOs = books.stream().map(this::convert2DTO).collect(Collectors.toList());
+    List<BookDTO> bookDTOs = books.stream()
+                                .map(this::convert2DTO)
+                                .collect(Collectors.toList());
 
     // Collectors.toSet() 就返回 Set<BookDTO>
 
@@ -99,7 +101,8 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
         private Integer id;
         private String name;
     }
-    Map<Integer, Book> bookMap = books.stream().collect(Collectors.toMap(Book::getId, Function.identity()));
+    Map<Integer, Book> bookMap = books.stream()
+                                .collect(Collectors.toMap(Book::getId, Function.identity()));
     ```
 
 - `List<Book>` to `Map<Integer, String>` 
@@ -111,7 +114,8 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
         private Integer id;
         private String name;
     }
-    Map<Integer, String> bookIdNameMap = books.stream().collect(Collectors.toMap(Book::getId, Book::getName));
+    Map<Integer, String> bookIdNameMap = books.stream()
+                                .collect(Collectors.toMap(Book::getId, Book::getName));
     ```
 
 - `List<Book>` to `Map<Integer, List<Book>>` 
@@ -125,7 +129,8 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
         private Integer categoryId;
     } 
     
-    Map<Integer, List<Book>> categoryBooksMap = books.stream().collect(Collectors.groupingBy(Book::getCategoryId));
+    Map<Integer, List<Book>> categoryBooksMap = books.stream()
+                                .collect(Collectors.groupingBy(Book::getCategoryId));
     ```
 
 - `List<Book>` to `Map<Integer, List<String>>` 
@@ -139,7 +144,8 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
         private Integer categoryId;
     } 
     
-    Map<Integer, List<String>> categoryBookNamesMap = books.stream().collect(Collectors.groupingBy(Book::getCategoryId, Collectors.mapping(Book::getName, Collectors.toList())));
+    Map<Integer, List<String>> categoryBookNamesMap = books.stream()
+                                .collect(Collectors.groupingBy(Book::getCategoryId, Collectors.mapping(Book::getName, Collectors.toList())));
     ```
 
 - `List<Book>` to `Map<Integer, Long>` 
@@ -153,7 +159,8 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
         private Integer categoryId;
     }
     
-    Map<Integer, Long> categoryCountMap = books.stream().collect(Collectors.groupingBy(Book::getCategoryId, Collectors.counting()));
+    Map<Integer, Long> categoryCountMap = books.stream()
+                            .collect(Collectors.groupingBy(Book::getCategoryId, Collectors.counting()));
     ```
 
 - `List<Book> ` to`List<Integer>`
@@ -170,6 +177,33 @@ sumValue = Stream.of(1, 2, 3, 4).reduce(Integer::sum).get();
     List<Integer> ids = books.stream()
     		.flatMap(book -> Stream.of(book.getId(), book.getCategoryId()))
     		.collect(Collectors.toList());
+    ```
+
+## sorted
+
+- 排序字段有null时，可以使用`Comparator.nullsLast()`
+
+    ```java
+        class Book {
+            private Integer id;
+            private String name;
+            private Integer categoryId;
+        }
+        List<Integer> ids = books.stream()
+            .sorted(Comparator.comparing(Book::getCategoryId, Comparator.nullsLast(Comparator.naturalOrder())))
+            .collect(Collectors.toList());
+    ```
+- 多字段排序，先按categoryId，再按name，`thenComparing`
+
+    ```java
+        class Book {
+            private Integer id;
+            private String name;
+            private Integer categoryId;
+        }
+        List<Integer> ids = books.stream()
+            .sorted(Comparator.comparing(Book::getCategoryId).thenComparing(Book::getName))
+            .collect(Collectors.toList());
     ```
 
 # 关于效率
