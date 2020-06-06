@@ -198,8 +198,28 @@ private XMLSlideShow initPPTPages(XMLSlideShow ppt, List<PPTDataItem> demandProj
 }
 ```
 
-### 讲道理
+### PS
 
 apache poi 的文档是真心简陋...用起来全靠自己爬坑。
 
-引入哪些jar包，官网列的很清楚，没必要无脑复制网上博客里列的，
+引入哪些jar包，[官网](http://poi.apache.org/components/index.html)列的很清楚，没必要无脑复制网上博客里列的
+
+|                          Component                           |    Application type     |                       Maven artifactId                       |                            Notes                             |
+| :----------------------------------------------------------: | :---------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+|  [POIFS](http://poi.apache.org/components/poifs/index.html)  |     OLE2 Filesystem     |                            *poi*                             |        Required to work with OLE2 / POIFS based files        |
+|   [HPSF](http://poi.apache.org/components/hpsf/index.html)   |   OLE2 Property Sets    |                            *poi*                             |                                                              |
+|    [HSSF](http://poi.apache.org/components/spreadsheet/)     |        Excel XLS        |                            *poi*                             |       For HSSF only, if common SS is needed see below        |
+|     [HSLF](http://poi.apache.org/components/slideshow/)      |     PowerPoint PPT      |                       *poi-scratchpad*                       |                                                              |
+|      [HWPF](http://poi.apache.org/components/document/)      |        Word DOC         |                       *poi-scratchpad*                       |                                                              |
+| [HDGF](http://poi.apache.org/components/diagram/index.html)  |        Visio VSD        |                       *poi-scratchpad*                       |                                                              |
+|   [HPBF](http://poi.apache.org/components/hpbf/index.html)   |      Publisher PUB      |                       *poi-scratchpad*                       |                                                              |
+|   [HSMF](http://poi.apache.org/components/hsmf/index.html)   |       Outlook MSG       |                       *poi-scratchpad*                       |                                                              |
+|                             DDF                              | Escher common drawings  |                            *poi*                             |                                                              |
+|                             HWMF                             |      WMF drawings       |                       *poi-scratchpad*                       |                                                              |
+| [OpenXML4J](http://poi.apache.org/components/oxml4j/index.html) |          OOXML          | *poi-ooxml* plus either *poi-ooxml-schemas* or *ooxml-schemas* and *ooxml-security* |    See notes below for differences between these options     |
+|    [XSSF](http://poi.apache.org/components/spreadsheet/)     |       Excel XLSX        |                         *poi-ooxml*                          |                                                              |
+|     [XSLF](http://poi.apache.org/components/slideshow/)      |     PowerPoint PPTX     |                         *poi-ooxml*                          |                                                              |
+|      [XWPF](http://poi.apache.org/components/document/)      |        Word DOCX        |                         *poi-ooxml*                          |                                                              |
+| [XDGF](http://poi.apache.org/components/diagram/index.html)  |       Visio VSDX        |                         *poi-ooxml*                          |                                                              |
+| [Common SL](http://poi.apache.org/components/slideshow/index.html) | PowerPoint PPT and PPTX |               *poi-scratchpad* and *poi-ooxml*               | SL code is in the core POI jar, but implementations are in poi-scratchpad and poi-ooxml. |
+|  [Common SS](http://poi.apache.org/components/spreadsheet/)  |   Excel XLS and XLSX    |                         *poi-ooxml*                          | WorkbookFactory and friends all require poi-ooxml, not just core poi |
