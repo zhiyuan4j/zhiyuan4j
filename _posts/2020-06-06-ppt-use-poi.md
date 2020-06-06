@@ -24,11 +24,11 @@ commnet: true
 
 1. 打开PPT母版视图
 
-![ppt1](..\img\ppt1.png)
+![ppt1](..\..\img\ppt1.png)
 
 2. 创建你自己的样式，**字体样式什么的一定要在母版视图下调整**，不然代码填充时，样式就会变成代码里默认的了
 
-   ![ppt2](..\img\ppt2.png)
+   ![ppt2](..\..\img\ppt2.png)
 
 3. 调整好，关闭母版视图，以这个ppt母版来新增一页ppt。
 
@@ -74,7 +74,8 @@ for (XSLFShape shape : shapes) {
     if (shape instanceof XSLFAutoShape) {
         // 这里用组件里的text是最保险的匹配方式，没找到比较程序员方式的自定义占位符id
         XSLFAutoShape autoShape = (XSLFAutoShape) shape;
-        // 这里trim()下就是经验之谈了，因为你ppt里一步小心就可多敲个空格，或者ppt自动给你追加个空格，trim()下以防万一，或者replaceAll("\\s", "")更实用
+        // 这里trim()下就是经验之谈了，因为你ppt里一步小心就可多敲个空格，或者ppt自动给你追加个空格
+        //trim()下以防万一，或者replaceAll("\\s", "")更实用
         String placeHolder = autoShape.getText().trim();
         if ("目标填充区占位符".equals(palceHolder)) {
             autoShape.setText("修改后的标发的说法但是发射点的发生发射点发题");
@@ -146,22 +147,22 @@ private void replaceImage(XSLFSlide slide, XSLFAutoShape imageShape, InputStream
 	// 这段代码不一定会百分之百复制完整你的PPT
 	// 如果你当前页ppt有些内容是来自于ppt母版的统一控制，比如背景图片啥的，复制出来的ppt可能不会带上背景图，没做过详细测试研究
 	// 如果你遇到这种情况，那你搜索的关键词就是 clone ppt slide master
-	private void cloneProjectDetailTemplate(XMLSlideShow ppt) {
-        // 创建一页新ppt
-        XSLFSlide newSlide = ppt.createSlide();
-        // 获取项目模版页ppt
-        XSLFSlide projectDetailSlide = ppt.getSlides().get(2);
-        // 将项目模版页的元素复制到新的ppt页里
-        XSLFSlideLayout srcLayout = projectDetailSlide.getSlideLayout();
-        XSLFSlideLayout newLayout = newSlide.getSlideLayout();
-        newLayout.importContent(srcLayout);
-        newSlide.importContent(projectDetailSlide);
-    }
+private void cloneProjectDetailTemplate(XMLSlideShow ppt) {
+    // 创建一页新ppt
+    XSLFSlide newSlide = ppt.createSlide();
+    // 获取项目模版页ppt
+    XSLFSlide projectDetailSlide = ppt.getSlides().get(2);
+    // 将项目模版页的元素复制到新的ppt页里
+    XSLFSlideLayout srcLayout = projectDetailSlide.getSlideLayout();
+    XSLFSlideLayout newLayout = newSlide.getSlideLayout();
+    newLayout.importContent(srcLayout);
+    newSlide.importContent(projectDetailSlide);
+}
 ```
 
-#### 如何解决克隆出来的ppt无法编辑设值
+#### 如何解决克隆出来的ppt无法编辑
 
-爬坑时，又看到说这是一个bug。变通的方案就是：**先根据你的业务数据，把ppt的页数克隆补全，把这个补全了的ppt保存到磁盘，再读取出来，就可以正常编辑所有页了**
+爬坑时，有看到说这是一个bug。变通的方案就是：**先根据你的业务数据，把ppt的页数克隆补全，把这个补全了的ppt保存到磁盘，再读取出来，就可以正常编辑所有页了**
 
 ```java
 // demandProjectDetails是我的业务数据
